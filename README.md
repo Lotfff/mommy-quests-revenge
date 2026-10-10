@@ -1,51 +1,50 @@
-# Mommy Quests — Revenge experimental plugin
+# Mommy Quests — Revenge plugin
 
-This repository packages an **experimental Revenge plugin** for Discord Android.
+A legacy Vendetta/Revenge-format plugin for Discord Android.
+
+## Install in Revenge
+
+Add this plugin URL in Revenge:
+
+```text
+https://lotfff.github.io/mommy-quests-revenge/MommyQuests/
+```
+
+Revenge loads the generated `manifest.json` and `index.js` from that directory.
 
 ## Current status
 
-The plugin is intentionally **diagnostics-only**. It confirms that Revenge can load
-an Mommy-branded plugin and logs the available mobile runtime/module surface.
+This release is a **diagnostics-only compatibility build**. It confirms that the
+plugin loads in the mobile Revenge runtime and logs the available runtime/module
+surface.
 
-The upstream Mommy Quest Completer is a Vencord/Discord Desktop project. Its engine
-uses Electron, `DiscordNative`, desktop Flux/Webpack stores, desktop activity APIs,
-and a native achievement-bypass module. Those APIs are not interchangeable with
-Revenge’s Android runtime. Copying the Vencord files into a Revenge plugin would
-therefore fail or risk unintended requests.
-
-A functional Android port requires identifying and testing the corresponding mobile
-quest modules and implementing a separate mobile transport. This repository is the
-safe starting point for that work; it does not automate quests yet.
-
-## Install through Revenge
-
-Add this repository as a Revenge plugin repository, then install **Mommy Quests
-(Experimental)**. The plugin ID is:
-
-```text
-com.lotfff.mommy-quests-revenge
-```
-
-After enabling it, inspect the Revenge developer/evaluate-JavaScript console for
-messages beginning with `[Mommy Quests]`.
+The original desktop quest engine is not copied into this plugin because it relies
+on Electron, `DiscordNative`, desktop Flux/Webpack stores, desktop activity APIs,
+and a desktop-only native module. Those APIs are not interchangeable with Revenge
+on Android. A full Android port would require separate mobile API discovery and
+real-device testing.
 
 ## Build locally
 
-This repository follows the official Revenge plugin template:
+The repository follows the legacy build layout used by working Revenge plugins:
 
 ```bash
 bun install
-bun run build mommy-quests-revenge
-./gradlew packageMommyQuestsRevenge
+bun run build
 ```
 
-The packaged artifact is written under `build/dist/`.
+The output is written to:
 
-## Safety and compatibility
+```text
+dist/MommyQuests/manifest.json
+dist/MommyQuests/index.js
+```
 
-- Android/Discord client modification is unsupported by Discord and may violate
-  Discord’s Terms of Service.
-- The original Mommy project warns that quest automation can trigger quest-access
-  restrictions or other account enforcement.
-- This repository does not include the original desktop automation engine and does
-  not claim Android quest completion support.
+The GitHub Actions workflow publishes `dist/` to GitHub Pages automatically on
+pushes to `main`.
+
+## Warning
+
+Discord client modifications and quest automation may violate Discord’s Terms of
+Service and may result in account restrictions. This diagnostics build does not
+automate quests.

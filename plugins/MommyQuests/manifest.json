@@ -1,0 +1,13 @@
+{
+  "name": "Mommy Quests (Experimental)",
+  "description": "Experimental Revenge/Android compatibility diagnostics for Mommy Quests.",
+  "authors": [
+    {
+      "name": "Lotfff"
+    }
+  ],
+  "main": "src/index.ts",
+  "vendetta": {
+    "icon": "PencilIcon"
+  }
+}
