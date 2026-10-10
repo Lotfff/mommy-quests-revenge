@@ -1,7 +1,7 @@
 /**
- * Orion Quests - Revenge compatibility scaffold.
+ * Mommy Quests - Revenge compatibility scaffold.
  *
- * The upstream Orion implementation targets Discord Desktop/Vencord and
+ * The upstream Mommy implementation targets Discord Desktop/Vencord and
  * depends on Electron, DiscordNative, desktop Flux stores, and desktop-only
  * activity APIs. Revenge runs inside Discord Android, so those assumptions
  * cannot be reused safely. This plugin deliberately performs diagnostics only
@@ -29,13 +29,13 @@ function describeRuntime() {
 
 export default plugin({
   start() {
-    console.info("[Orion Quests] Revenge plugin loaded.");
+    console.info("[Mommy Quests] Revenge plugin loaded.");
     console.info(
-      "[Orion Quests] This build is diagnostics-only; the upstream engine requires Discord Desktop/Vencord.",
+      "[Mommy Quests] This build is diagnostics-only; the upstream engine requires Discord Desktop/Vencord.",
     );
-    console.info("[Orion Quests] Runtime:", describeRuntime());
+    console.info("[Mommy Quests] Runtime:", describeRuntime());
   },
   stop() {
-    console.info("[Orion Quests] Revenge plugin unloaded.");
+    console.info("[Mommy Quests] Revenge plugin unloaded.");
   },
 });

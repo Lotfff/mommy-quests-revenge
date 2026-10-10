@@ -3,18 +3,18 @@
   "name": "Lotfff Revenge Plugins",
   "description": "Experimental Revenge plugins maintained by Lotfff.",
   "plugins": {
-    "com.lotfff.orion-quests-revenge": {
-      "name": "Orion Quests (Experimental)",
-      "description": "Experimental Revenge/Android compatibility layer for the Orion Quest project. It currently performs compatibility diagnostics only; the original quest automation engine is desktop-only and is not enabled here.",
+    "com.lotfff.mommy-quests-revenge": {
+      "name": "Mommy Quests (Experimental)",
+      "description": "Experimental Revenge/Android compatibility layer for the Mommy Quest project. It currently performs compatibility diagnostics only; the original quest automation engine is desktop-only and is not enabled here.",
       "author": "Lotfff",
       "channels": {
         "latest": "0.1.0"
       },
       "versions": {
         "0.1.0": {
-          "url": "https://raw.githubusercontent.com/Lotfff/orion-quests-revenge/gh-pages/pool/com.lotfff.orion-quests-revenge@0.1.0.zip",
-          "sha256": "5bbe939ce9c0e5e8ceba03659a137b1d5787aeb663aa3d75b54c5f05a2d5c06b",
-          "size": 1126,
+          "url": "https://raw.githubusercontent.com/Lotfff/mommy-quests-revenge/gh-pages/pool/com.lotfff.mommy-quests-revenge@0.1.0.zip",
+          "sha256": "db3718b7c842a836dac30ed4591c264323855cc2bb7c7c2c5ed236d2aabfd665",
+          "size": 1128,
           "dependencies": {
             "revenge.api": {
               "version": ">=1 <2"
