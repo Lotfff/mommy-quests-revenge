@@ -5,9 +5,13 @@
  * engine depends on Electron, DiscordNative, desktop Flux stores, and desktop
  * activity APIs that are not available through the mobile Revenge runtime.
  */
+import { commands } from '@revenge-mod/api'
+import type { ApplicationCommandType } from '@revenge-mod/revenge/src/lib/api/commands/types'
+
+let unregisterCommand: (() => unknown) | undefined
 
 function runtimeSummary() {
-  const runtime = (globalThis as any).revenge
+  const runtime = (globalThis as any).bunny ?? (globalThis as any).revenge
   const discord = runtime?.discord
   const modules = discord?.modules
 
@@ -22,6 +26,18 @@ function runtimeSummary() {
   }
 }
 
+const mommyCommand = {
+  name: 'mommy',
+  description: 'Show the Mommy Quests compatibility status.',
+  type: 1 as ApplicationCommandType,
+  options: [],
+  shouldHide: () => false,
+  execute: () => ({
+    content:
+      '**Mommy Quests** is loaded.\nThis Revenge build is diagnostics-only; the original quest engine requires Discord Desktop/Vencord.',
+  }),
+}
+
 export default {
   onLoad: () => {
     console.info('[Mommy Quests] Plugin loaded.')
@@ -29,8 +45,17 @@ export default {
       '[Mommy Quests] This build is diagnostics-only; the original engine requires Discord Desktop/Vencord.',
     )
     console.info('[Mommy Quests] Runtime:', runtimeSummary())
+
+    try {
+      unregisterCommand = commands.registerCommand(mommyCommand)
+      console.info('[Mommy Quests] Registered /mommy command.')
+    } catch (error) {
+      console.error('[Mommy Quests] Failed to register /mommy command:', error)
+    }
   },
   onUnload: () => {
+    unregisterCommand?.()
+    unregisterCommand = undefined
     console.info('[Mommy Quests] Plugin unloaded.')
   },
 }
