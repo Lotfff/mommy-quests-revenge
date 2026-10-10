@@ -458,6 +458,24 @@ async function controlQuestById(questId: string, action: "pause" | "resume"): Pr
         : `"${name}" is no longer paused.`;
 }
 
+async function executeMommyAction(action: "start" | "stop" | "status" | "pause" | "resume", args: any[], ctx: any): Promise<void> {
+    const quest = args.find((arg: any) => arg.name === "quest")?.value;
+    const target = quest == null ? undefined : String(quest);
+    let response: string;
+    try {
+        if (target && action !== "pause" && action !== "resume") {
+            response = "The quest option only applies to pause or resume.";
+        } else if (action === "start") response = await ensureReadyStart();
+        else if (action === "stop") response = await ensureReadyStop();
+        else if (action === "pause") response = await ensureReadyPause(target);
+        else if (action === "resume") response = await ensureReadyResume(target);
+        else response = await statusSummary();
+    } catch (error) {
+        response = `Control unavailable: ${error instanceof Error ? error.message : String(error)}`;
+    }
+    sendBotMessage(ctx.channel.id, { content: `**Mommy**\n\`\`\`\n${response}\n\`\`\`` });
+}
+
 export default definePlugin({
     name: "MommyQuests",
     description:
@@ -541,44 +559,51 @@ export default definePlugin({
             inputType: ApplicationCommandInputType.BUILT_IN,
             options: [
                 {
-                    name: "action",
-                    description: "Action to perform",
-                    type: ApplicationCommandOptionType.STRING,
-                    required: true,
-                    choices: [
-                        { name: "start", value: "start", label: "Start the engine" },
-                        { name: "stop", value: "stop", label: "Stop the engine" },
-                        { name: "status", value: "status", label: "Show running tasks" },
-                        { name: "pause", value: "pause", label: "Pause one quest, or all when quest is omitted" },
-                        { name: "resume", value: "resume", label: "Resume one quest, or all when quest is omitted" },
+                    name: "start",
+                    description: "Start the MommyQuests engine",
+                    type: ApplicationCommandOptionType.SUB_COMMAND,
+                    options: [],
+                },
+                {
+                    name: "stop",
+                    description: "Stop the MommyQuests engine",
+                    type: ApplicationCommandOptionType.SUB_COMMAND,
+                    options: [],
+                },
+                {
+                    name: "status",
+                    description: "Show running MommyQuests tasks",
+                    type: ApplicationCommandOptionType.SUB_COMMAND,
+                    options: [],
+                },
+                {
+                    name: "pause",
+                    description: "Pause one quest, or all quests when omitted",
+                    type: ApplicationCommandOptionType.SUB_COMMAND,
+                    options: [
+                        {
+                            name: "quest",
+                            description: "Quest name, unique name fragment, or ID; omit for all",
+                            type: ApplicationCommandOptionType.STRING,
+                            required: false,
+                        },
                     ],
                 },
                 {
-                    name: "quest",
-                    description: "Quest name, unique name fragment, or ID for pause/resume; omit for all",
-                    type: ApplicationCommandOptionType.STRING,
-                    required: false,
+                    name: "resume",
+                    description: "Resume one quest, or all quests when omitted",
+                    type: ApplicationCommandOptionType.SUB_COMMAND,
+                    options: [
+                        {
+                            name: "quest",
+                            description: "Quest name, unique name fragment, or ID; omit for all",
+                            type: ApplicationCommandOptionType.STRING,
+                            required: false,
+                        },
+                    ],
                 },
             ],
-            execute: async (args, ctx) => {
-                const action = String(args.find(a => a.name === "action")?.value ?? "status");
-                const quest = args.find(a => a.name === "quest")?.value;
-                const target = quest == null ? undefined : String(quest);
-
-                let response: string;
-                try {
-                    if (target && action !== "pause" && action !== "resume") {
-                        response = "The quest option only applies to pause or resume.";
-                    } else if (action === "start") response = await ensureReadyStart();
-                    else if (action === "stop") response = await ensureReadyStop();
-                    else if (action === "pause") response = await ensureReadyPause(target);
-                    else if (action === "resume") response = await ensureReadyResume(target);
-                    else response = await statusSummary();
-                } catch (error) {
-                    response = `Control unavailable: ${error instanceof Error ? error.message : String(error)}`;
-                }
-                sendBotMessage(ctx.channel.id, { content: `**Mommy**\n\`\`\`\n${response}\n\`\`\`` });
-            },
+            execute: async (args, ctx) => executeMommyAction(String(args[0]?.name ?? "status") as "start" | "stop" | "status" | "pause" | "resume", args[0]?.options ?? args, ctx),
         },
     ],
 
