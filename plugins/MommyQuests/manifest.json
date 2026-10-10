@@ -1,6 +1,6 @@
 {
-  "name": "Mommy Quests (Experimental)",
-  "description": "Experimental Revenge/Android compatibility diagnostics for Mommy Quests.",
+  "name": "Mommy Quests Mobile Engine",
+  "description": "Android Revenge quest engine with mobile request discovery, enrollment, status, and video progress support.",
   "authors": [
     {
       "name": "Lotfff"
