@@ -1,5 +1,0 @@
-node_modules/
-build/
-plugins/*/build/
-.gradle/
-local.properties
