@@ -12,17 +12,17 @@ https://lotfff.github.io/mommy-quests-revenge/MommyQuests/
 
 Revenge loads the generated `manifest.json` and `index.js` from that directory.
 
-## Current status
+## Android engine status
 
-This release is a **diagnostics-only compatibility build**. It confirms that the
-plugin loads in the mobile Revenge runtime and logs the available runtime/module
-surface.
+This release includes a real mobile engine. It discovers Discord's internal
+Android request module and QuestStore, loads current quests, enrolls available
+quests, reports status, and completes video quests through Discord's
+`video-progress` endpoint.
 
-The original desktop quest engine is not copied into this plugin because it relies
-on Electron, `DiscordNative`, desktop Flux/Webpack stores, desktop activity APIs,
-and a desktop-only native module. Those APIs are not interchangeable with Revenge
-on Android. A full Android port would require separate mobile API discovery and
-real-device testing.
+Android Discord does not expose the desktop process/activity APIs or Electron
+native module needed to spoof game, stream, activity, or achievement tasks. Those
+tasks are listed as **SKIPPED** with an explanation rather than being falsely
+reported as completed.
 
 ## Desktop Vencord plugin
 
@@ -37,12 +37,18 @@ cannot run in the Android Revenge plugin loader. See its
 [`README.md`](vencord/MommyQuests/README.md) and
 [`docs/VENCORD-PLUGIN.md`](vencord/MommyQuests/docs/VENCORD-PLUGIN.md) for setup.
 
-## Command
+## Android command
 
-After enabling the plugin, open Discord's chat command picker and choose `/mommy`.
-It confirms that the plugin is loaded and explains the current diagnostics-only
-compatibility status. The command is registered when the plugin loads and removed
-again when it unloads.
+After enabling the plugin, use the command picker and select `/mommy`. Fill in the
+`action` option with one of:
+
+```text
+/mommy action:start
+/mommy action:stop
+/mommy action:status
+```
+
+An optional `quest` value filters the status output by quest ID or name.
 
 ## Build locally
 
@@ -66,5 +72,4 @@ pushes to `main`.
 ## Warning
 
 Discord client modifications and quest automation may violate Discord’s Terms of
-Service and may result in account restrictions. This diagnostics build does not
-automate quests.
+Service and may result in account restrictions. Use this at your own risk.
