@@ -211,7 +211,17 @@ const mommyCommand = {
   description: 'Run Mommy Quests on Android Revenge',
   type: 1,
   options: [
-    { name: 'action', description: 'start, stop, status, or summary', type: 3, required: true },
+    {
+      name: 'action',
+      description: 'Choose what Mommy Quests should do',
+      type: 3,
+      required: true,
+      choices: [
+        { name: 'Start', value: 'start' },
+        { name: 'Stop', value: 'stop' },
+        { name: 'Status', value: 'status' },
+      ],
+    },
     { name: 'quest', description: 'Optional quest name or ID for status filtering', type: 3, required: false },
   ],
   execute: async (args: any[]) => {
@@ -231,7 +241,7 @@ const mommyCommand = {
       const rows = lastSnapshot.filter(row => !wanted || row.id === wanted || row.name.toLowerCase().includes(wanted))
       return { content: `**Mommy Quests**\n${mobileSummary()}\n${rows.length ? rows.map(snapshotLine).join('\n') : 'No run results yet. Use `/mommy action:start`.'}` }
     }
-    return { content: '**Mommy Quests** usage: `/mommy action:start`, `/mommy action:stop`, or `/mommy action:status`.' }
+    return { content: `**Mommy Quests**\nNo valid action was received. Select **Start**, **Stop**, or **Status** from the action picker.\n${mobileSummary()}` }
   },
 }
 
