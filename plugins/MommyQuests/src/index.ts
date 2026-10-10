@@ -5,9 +5,6 @@
  * engine depends on Electron, DiscordNative, desktop Flux stores, and desktop
  * activity APIs that are not available through the mobile Revenge runtime.
  */
-import { commands } from '@revenge-mod/api'
-import type { ApplicationCommandType } from '@revenge-mod/revenge/src/lib/api/commands/types'
-
 let unregisterCommand: (() => unknown) | undefined
 
 function runtimeSummary() {
@@ -29,7 +26,7 @@ function runtimeSummary() {
 const mommyCommand = {
   name: 'mommy',
   description: 'Show the Mommy Quests compatibility status.',
-  type: 1 as ApplicationCommandType,
+  type: 1,
   options: [],
   shouldHide: () => false,
   execute: () => ({
@@ -47,7 +44,14 @@ export default {
     console.info('[Mommy Quests] Runtime:', runtimeSummary())
 
     try {
-      unregisterCommand = commands.registerCommand(mommyCommand)
+      const globals = globalThis as any
+      const registerCommand =
+        globals.bunny?.api?.commands?.registerCommand ??
+        globals.vendetta?.commands?.registerCommand
+      if (typeof registerCommand !== 'function') {
+        throw new Error('Revenge command API was not found')
+      }
+      unregisterCommand = registerCommand(mommyCommand)
       console.info('[Mommy Quests] Registered /mommy command.')
     } catch (error) {
       console.error('[Mommy Quests] Failed to register /mommy command:', error)
