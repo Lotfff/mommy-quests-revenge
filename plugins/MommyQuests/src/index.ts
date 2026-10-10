@@ -3,7 +3,7 @@
  *
  * The mobile client has no Electron process APIs, so game/stream/achievement tasks
  * cannot be spoofed safely. This engine uses Discord's own mobile request module
- * for quest discovery, enrollment, status, and video progress, while reporting
+ * for quest discovery, enrollment, status, and WATCH_VIDEO/WATCH_VIDEO_ON_MOBILE progress, while reporting
  * unsupported task types honestly.
  */
 let unregisterCommand: (() => unknown) | undefined
@@ -153,10 +153,13 @@ async function runVideo(quest: any, taskKey: string, task: any, signal: AbortSig
   const result: QuestSnapshot = { id: String(quest.id), name: questName(quest), task: taskKey, kind: 'video', target, progress, status: 'RUNNING' }
   if (!(target > 0)) return { ...result, status: 'SKIPPED', reason: 'Discord supplied no valid video target.' }
   while (progress < target && !signal.aborted) {
-    await new Promise<void>(resolve => setTimeout(resolve, 7000 + Math.floor(Math.random() * 2500)))
+    // Discord documents small 10–15 second intervals for video progress. Keep the
+    // timestamp integer because the mobile endpoint describes it in whole seconds.
+    const intervalSeconds = 10 + Math.floor(Math.random() * 6)
+    await new Promise<void>(resolve => setTimeout(resolve, intervalSeconds * 1000))
     if (signal.aborted) break
-    progress = Math.min(target, progress + 7.5)
-    const body = await request('post', `/quests/${quest.id}/video-progress`, { timestamp: Number(progress.toFixed(3)) })
+    progress = Math.min(target, progress + intervalSeconds)
+    const body = await request('post', `/quests/${quest.id}/video-progress`, { timestamp: Math.floor(progress) })
     const serverProgress = Number(body?.progress?.[taskKey]?.value ?? body?.progress?.WATCH_VIDEO?.value ?? 0)
     if (serverProgress > progress) progress = Math.min(target, serverProgress)
     result.progress = progress
