@@ -28,7 +28,6 @@ const mommyCommand = {
   description: 'Show the Mommy Quests compatibility status.',
   type: 1,
   options: [],
-  shouldHide: () => false,
   execute: () => ({
     content:
       '**Mommy Quests** is loaded.\nThis Revenge build is diagnostics-only; the original quest engine requires Discord Desktop/Vencord.',
